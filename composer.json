@@ -1,0 +1,45 @@
+{
+    "name": "marcot89/laravel-magic-routes",
+    "description": "Magic Routes for Laravel Applications",
+    "license": "license",
+    "authors": [
+        {
+            "name": "Marco Túlio de Avila Santos",
+            "email": "marcotulio.avila@gmail.com"
+        }
+    ],
+    "homepage": "https://github.com/marcot89/laravel-magic-routes",
+    "keywords": [
+        "Laravel",
+        "LaravelMagicRoutes"
+    ],
+    "require": {
+        "illuminate/support": "~5|~6|~7"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0",
+        "mockery/mockery": "^1.1",
+        "orchestra/testbench": "~3|~4",
+        "sempro/phpunit-pretty-print": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "MarcoT89\\LaravelMagicRoutes\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MarcoT89\\LaravelMagicRoutes\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "MarcoT89\\LaravelMagicRoutes\\LaravelMagicRoutesServiceProvider"
+            ],
+            "aliases": {
+                "LaravelMagicRoutes": "MarcoT89\\LaravelMagicRoutes\\Facades\\LaravelMagicRoutes"
+            }
+        }
+    }
+}
