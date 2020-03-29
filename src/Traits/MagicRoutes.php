@@ -10,6 +10,25 @@ use MarcoT89\LaravelMagicRoutes\RouteBuilder;
 
 trait MagicRoutes
 {
+    public function __construct()
+    {
+        $this->registerMiddleware();
+    }
+
+    protected function registerMiddleware()
+    {
+        $middlewares      = [];
+        $this->middleware = is_string($this->middleware) ? [$this->middleware] : $this->middleware;
+        foreach ($this->middleware as $middleware => $options) {
+            if (!is_string($middleware)) {
+                $middleware = $options;
+                $options    = [];
+            }
+            $middlewares[] = compact('middleware', 'options');
+        }
+        $this->middleware = $middlewares;
+    }
+
     protected function registerRoutes()
     {
         $this->getPublicMethods()->each(function (ReflectionMethod $method) {
