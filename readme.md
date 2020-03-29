@@ -2,8 +2,9 @@
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Total Downloads][ico-downloads]][link-downloads]
-[![Build Status][ico-travis]][link-travis]
-[![StyleCI][ico-styleci]][link-styleci]
+
+<!-- [![Build Status][ico-travis]][link-travis]
+[![StyleCI][ico-styleci]][link-styleci] -->
 
 This is where your description should go. Take a look at [contributing.md](contributing.md) to see a to do list.
 
@@ -11,8 +12,8 @@ This is where your description should go. Take a look at [contributing.md](contr
 
 Via Composer
 
-``` bash
-$ composer require marcot89/laravelmagicroutes
+```bash
+$ composer require marcot89/laravel-magic-routes
 ```
 
 ## Usage
@@ -23,7 +24,7 @@ Please see the [changelog](changelog.md) for more information on what has change
 
 ## Testing
 
-``` bash
+```bash
 $ composer test
 ```
 
@@ -37,21 +38,20 @@ If you discover any security related issues, please email author email instead o
 
 ## Credits
 
-- [author name][link-author]
-- [All Contributors][link-contributors]
+-   [author name][link-author]
+-   [All Contributors][link-contributors]
 
 ## License
 
 license. Please see the [license file](license.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/marcot89/laravelmagicroutes.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/marcot89/laravelmagicroutes.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/marcot89/laravelmagicroutes/master.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/marcot89/laravel-magic-routes.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/marcot89/laravel-magic-routes.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/marcot89/laravel-magic-routes/master.svg?style=flat-square
 [ico-styleci]: https://styleci.io/repos/12345678/shield
-
-[link-packagist]: https://packagist.org/packages/marcot89/laravelmagicroutes
-[link-downloads]: https://packagist.org/packages/marcot89/laravelmagicroutes
-[link-travis]: https://travis-ci.org/marcot89/laravelmagicroutes
+[link-packagist]: https://packagist.org/packages/marcot89/laravel-magic-routes
+[link-downloads]: https://packagist.org/packages/marcot89/laravel-magic-routes
+[link-travis]: https://travis-ci.org/marcot89/laravel-magic-routes
 [link-styleci]: https://styleci.io/repos/12345678
 [link-author]: https://github.com/marcot89
 [link-contributors]: ../../contributors
