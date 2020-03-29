@@ -1,7 +1,7 @@
 {
     "name": "marcot89/laravel-magic-routes",
     "description": "Magic Routes for Laravel Applications",
-    "license": "license",
+    "license": "MIT",
     "authors": [
         {
             "name": "Marco Túlio de Avila Santos",
