@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
+use ReflectionObject;
 
 class RouteBuilder
 {
@@ -37,10 +38,17 @@ class RouteBuilder
     public function register()
     {
         $this->createBaseUrl()
-            ->createActionUrl();
+            ->createActionUrl()
+            ->sanitizeRoute();
 
+        $actionMap = [$this->getClass(), $this->method->name];
 
-        Route::{$this->httpMethod()}($this->route, [$this->getClass(), $this->method->name])->name($this->getRouteName());
+        if ($this->isInvokable()) {
+            $actionMap = $this->getClass();
+        }
+
+        Route::{$this->httpMethod()}($this->route, $actionMap)
+            ->name($this->getRouteName());
     }
 
     private function createBaseUrl()
@@ -52,7 +60,10 @@ class RouteBuilder
 
     private function createActionUrl()
     {
-        $routeParams = $this->createRouteParameters();
+        $routeParams = $this->createRouteParameters()->filter(function ($param) {
+            return !Str::contains($this->route, $param);
+        });
+
         $firstParam = $routeParams->shift();
 
         $this->route .= $firstParam ? "/$firstParam" : '';
@@ -68,11 +79,24 @@ class RouteBuilder
         return $this;
     }
 
+    private function sanitizeRoute()
+    {
+        $this->route = Str::of($this->route)
+            ->trim('/')
+            ->replace('//', '/');
+
+        return $this;
+    }
+
     private function suffix()
     {
         if ($this->isCrudAction()) {
             return $this->getCrudActions()->get($this->method->name)->suffix
                 ? $this->getActionName() : '';
+        }
+
+        if ($this->isInvokable()) {
+            return '';
         }
 
         return $this->getActionName();
@@ -82,6 +106,10 @@ class RouteBuilder
     {
         if ($this->isCrudAction()) {
             return $this->getCrudActions()->get($this->method->name)->verb;
+        }
+
+        if ($this->isInvokable() && $this->getProperty('method')) {
+            return Str::lower($this->getProperty('method'));
         }
 
         return $this->getHttpMethodFromMethodName() ?? 'get';
@@ -101,10 +129,11 @@ class RouteBuilder
     {
         $httpMethod = $this->getHttpMethodFromMethodName();
 
-        return Str::of($this->method->name)
+        $action = Str::of($this->method->name)
             ->replace($httpMethod, '')
-            ->kebab()
-            ->__toString();
+            ->kebab();
+
+        return $action->__toString();
     }
 
     private function isCrudAction()
@@ -177,7 +206,7 @@ class RouteBuilder
 
         $baseUrl = $this->getResourceUrl();
 
-        $prefixArray = collect(explode(
+        $namespacePrefixArray = collect(explode(
             '/',
             Str::of($namespacedController)
                 ->replace('\\', '/')
@@ -185,27 +214,48 @@ class RouteBuilder
         ))
             ->map(fn ($name) => Str::of($name)->snake()->slug()->__toString());
 
-        $prefixArray->pop();
-        $prefix = $prefixArray->join('/');
+        $namespacePrefixArray->pop();
+        $namespacePrefix = $namespacePrefixArray->join('/');
 
-        return $prefix ? "$prefix/$baseUrl" : $baseUrl;
+        $prefix = $this->getProperty('prefix');
+
+        if ($prefix) {
+            $baseUrl = "$prefix/$baseUrl";
+        }
+
+        return $namespacePrefix ? "$namespacePrefix/$baseUrl" : $baseUrl;
     }
 
     private function getResourceUrl()
     {
-        return Str::of($this->getClass())
+        $resourceUrl = Str::of($this->getClass())
             ->afterLast('\\')
             ->beforeLast('Controller')
             ->snake()
-            ->slug()
-            ->plural()
-            ->__toString();
+            ->slug();
+
+        if (!$this->isInvokable()) {
+            $resourceUrl = $resourceUrl->plural();
+        }
+
+        return $resourceUrl->__toString();
     }
 
     private function getRouteName()
     {
-        $baseName = Str::of($this->createControllerBaseUrl())->replace('/', '.');
-        $routeName = Str::of($this->getActionName());
+        $baseName = Str::of($this->route);
+
+        $this->createRouteParameters()->each(function ($param) use (&$baseName) {
+            $baseName = $baseName->replace($param, '')->replace('//', '/');
+        });
+
+        $baseName = $baseName->trim('/')->replace('/', '.');
+
+        $routeName = $this->getActionName();
+
+        if ($baseName->endsWith($routeName) || $routeName === '__invoke') {
+            return $baseName->__toString();
+        }
 
         return "$baseName.$routeName";
     }
@@ -213,5 +263,25 @@ class RouteBuilder
     private function getClass()
     {
         return get_class($this->controller);
+    }
+
+    private function getProperty($name)
+    {
+        $controller = new ReflectionObject($this->controller);
+
+        $property = $controller->hasProperty($name) ? $controller->getProperty($name) : null;
+
+        if (!$property) {
+            return null;
+        }
+
+        $property->setAccessible(true);
+
+        return $property->getValue($this->controller);
+    }
+
+    private function isInvokable()
+    {
+        return method_exists($this->controller, '__invoke');
     }
 }
