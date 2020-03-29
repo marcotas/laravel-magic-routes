@@ -2,11 +2,11 @@
 
 namespace MarcoT89\LaravelMagicRoutes\Traits;
 
-use App\MagicRoutes\RouteBuilder;
 use ReflectionMethod;
 use ReflectionObject;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
+use MarcoT89\LaravelMagicRoutes\RouteBuilder;
 
 trait MagicRoutes
 {
