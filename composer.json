@@ -8,6 +8,7 @@
             "email": "marcotulio.avila@gmail.com"
         }
     ],
+    "minimum-stability": "dev",
     "homepage": "https://github.com/marcot89/laravel-magic-routes",
     "keywords": [
         "Laravel",
