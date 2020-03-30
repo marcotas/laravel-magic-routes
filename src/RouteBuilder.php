@@ -192,6 +192,11 @@ class RouteBuilder
         return collect($parameters)
             ->filter(function (ReflectionParameter $parameter) {
                 $class = $parameter->getClass();
+
+                if (!$class) {
+                    return true;
+                }
+
                 return $class->name !== Request::class
                     && !$class->isSubclassOf(Request::class);
             });
