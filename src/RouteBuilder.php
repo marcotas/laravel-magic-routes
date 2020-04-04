@@ -136,9 +136,11 @@ class RouteBuilder
         return $action->__toString();
     }
 
-    private function isCrudAction()
+    private function isCrudAction($method = null)
     {
-        return $this->getCrudActions()->keys()->contains($this->method->name);
+        $method = $method ?? $this->method->name;
+
+        return $this->getCrudActions()->keys()->contains($method);
     }
 
     private function getCrudActions(): Collection
@@ -224,7 +226,7 @@ class RouteBuilder
 
         $prefix = $this->getProperty('prefix');
 
-        if ($prefix) {
+        if ($prefix && $baseUrl) {
             $baseUrl = "$prefix/$baseUrl";
         }
 
@@ -239,8 +241,12 @@ class RouteBuilder
             ->snake()
             ->slug();
 
-        if (!$this->isInvokable()) {
+        if ($this->shouldBePlural()) {
             $resourceUrl = $resourceUrl->plural();
+        }
+
+        if ($this->isCrudAction($resourceUrl)) {
+            return '';
         }
 
         return $resourceUrl->__toString();
@@ -288,5 +294,12 @@ class RouteBuilder
     private function isInvokable()
     {
         return method_exists($this->controller, '__invoke');
+    }
+
+    private function shouldBePlural()
+    {
+        $shouldBePlural = $this->getProperty('plural') ?? true;
+
+        return $this->isInvokable() ? false : $shouldBePlural;
     }
 }
