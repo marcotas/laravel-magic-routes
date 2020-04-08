@@ -6,7 +6,7 @@
 <!-- [![Build Status][ico-travis]][link-travis]
 [![StyleCI][ico-styleci]][link-styleci] -->
 
-This is where your description should go. Take a look at [contributing.md](contributing.md) to see a to do list.
+Create RESTfull routes for your laravel app based on your controller names and namespaces to avoid overrides and define a pattern to your projects routes. It is compatible with laravel 5+, 6+ and 7+.
 
 ## Installation
 
@@ -15,8 +15,6 @@ Via Composer
 ```bash
 $ composer require marcot89/laravel-magic-routes
 ```
-
-It is compatible with laravel 5+, 6+ and 7+.
 
 ## Usage
 
