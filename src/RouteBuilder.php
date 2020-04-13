@@ -219,7 +219,9 @@ class RouteBuilder
                 ->replace('\\', '/')
                 ->__toString()
         ))
-            ->map(fn ($name) => Str::of($name)->snake()->slug()->__toString());
+            ->map(function ($name) {
+                return Str::of($name)->snake()->slug()->__toString();
+            });
 
         $namespacePrefixArray->pop();
         $namespacePrefix = $namespacePrefixArray->join('/');

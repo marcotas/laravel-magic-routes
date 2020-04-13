@@ -33,6 +33,8 @@ class LaravelMagicRoutes
                 ->prepend('App');
             /** @var \Illuminate\Routing\Controller $controller */
             return resolve($controllerClass->__toString());
-        })->filter(fn (\Illuminate\Routing\Controller $controller) => method_exists($controller, 'registerRoutes'));
+        })->filter(function (\Illuminate\Routing\Controller $controller) {
+            return method_exists($controller, 'registerRoutes');
+        });
     }
 }
