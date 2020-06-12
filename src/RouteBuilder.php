@@ -2,14 +2,14 @@
 
 namespace MarcoT89\LaravelMagicRoutes;
 
-use ReflectionMethod;
-use ReflectionParameter;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
+use ReflectionMethod;
 use ReflectionObject;
+use ReflectionParameter;
 
 class RouteBuilder
 {
@@ -31,7 +31,7 @@ class RouteBuilder
     public function __construct(Controller $controller, ReflectionMethod $method)
     {
         $this->controller = $controller;
-        $this->method = $method;
+        $this->method     = $method;
         $this->parameters = $this->sanitizeParameters($method->getParameters());
     }
 
@@ -47,7 +47,7 @@ class RouteBuilder
             $actionMap = $this->getClass();
         }
 
-        Route::{$this->httpMethod()}($this->route, $actionMap)
+        Route::match($this->httpMethod(), $this->route, $actionMap)
             ->name($this->getRouteName());
     }
 
@@ -109,7 +109,7 @@ class RouteBuilder
         }
 
         if ($this->isInvokable() && $this->getProperty('method')) {
-            return Str::lower($this->getProperty('method'));
+            return Str::of($this->getProperty('method'))->lower()->explode('|')->toArray();
         }
 
         return $this->getHttpMethodFromMethodName() ?? 'get';
@@ -147,35 +147,35 @@ class RouteBuilder
     {
         return collect([
             'index' => (object) [
-                'verb' => 'get',
+                'verb'   => 'get',
                 'suffix' => false,
             ],
             'store' => (object) [
-                'verb' => 'post',
+                'verb'   => 'post',
                 'suffix' => false,
             ],
             'update' => (object) [
-                'verb' => 'put',
+                'verb'   => 'put',
                 'suffix' => false,
             ],
             'show' => (object) [
-                'verb' => 'get',
+                'verb'   => 'get',
                 'suffix' => false,
             ],
             'destroy' => (object) [
-                'verb' => 'delete',
+                'verb'   => 'delete',
                 'suffix' => false,
             ],
             'create' => (object) [
-                'verb' => 'get',
+                'verb'   => 'get',
                 'suffix' => true,
             ],
             'edit' => (object) [
-                'verb' => 'get',
+                'verb'   => 'get',
                 'suffix' => true,
             ],
             'forceDestroy' => (object) [
-                'verb' => 'delete',
+                'verb'   => 'delete',
                 'suffix' => true,
             ],
         ]);

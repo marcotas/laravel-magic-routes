@@ -6,7 +6,7 @@
 <!-- [![Build Status][ico-travis]][link-travis]
 [![StyleCI][ico-styleci]][link-styleci] -->
 
-Create RESTfull routes for your laravel app based on your controller names and namespaces to avoid overrides and define a pattern to your projects routes. It is compatible with laravel 5+, 6+ and 7+.
+Create RESTfull routes for your laravel app based on your controller names and namespaces to avoid overrides and define a pattern to your projects routes. It is compatible with laravel 7+.
 
 ## Installation
 
@@ -185,6 +185,8 @@ class PublishController extends Controller
 
     protected $middleware = 'auth';
     protected $method = 'post'; // only works for invokable controllers
+    // or
+    protected $method = 'post|put'; // separate by pipe for more http methods
 
     public function __invoke(Post $post) {...}
 }
